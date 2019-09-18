@@ -1,0 +1,24 @@
+.app {
+  background-color: #d2d2d2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.app-header {
+  height: 80px;
+  min-height: 80px;
+}
+.app-main {
+  background-color: #feeca5;
+  flex-grow: 1;
+}
+.app-footer {
+  height: 80px;
+  min-height: 80px;
+  background-color: #ccc;
+}
