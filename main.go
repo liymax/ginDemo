@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/liymax/gindemo/dao"
+	"log"
 	"net/http"
 	"time"
 
@@ -19,7 +19,7 @@ func main() {
 		}
 		bu.CreateAt = time.Now()
 		bu.UpdateAt = time.Now()
-		fmt.Printf("%v\n", bu)
+		log.Printf("%v\n", bu)
 		res := bu.Insert()
 		c.JSON(http.StatusOK, res)
 	})
@@ -60,7 +60,7 @@ func main() {
 		if c.Bind(&ids) != nil {
 			c.JSON(http.StatusOK, gin.H{"code": 4, "msg": "请求参数异常"})
 		}
-		fmt.Printf("%v\n", ids)
+		log.Printf("%v\n", ids)
 
 		bs,err := dao.FindByIds(ids)
 		if err == nil {
@@ -69,11 +69,18 @@ func main() {
 			c.JSON(http.StatusOK, gin.H{"code": 5, "msg": "查询失败"})
 		}
 	})
-
+	r.GET("/count", func(c *gin.Context) {
+		count,err := dao.Count()
+		if err == nil {
+			c.JSON(http.StatusOK, gin.H{"code": 0,"data": count})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"code": 5, "msg": "查询失败"})
+		}
+	})
 	r.GET("/businessList", func(c *gin.Context) {
 		var pv dao.PageVO
 		if c.ShouldBind(&pv) == nil {
-			fmt.Printf("%v\n", pv)
+			log.Printf("%v\n", pv)
 			bs,err := dao.FindList(pv)
 			if err == nil {
 				c.JSON(http.StatusOK, gin.H{"code": 0,"data": bs})
@@ -84,8 +91,12 @@ func main() {
 			c.JSON(http.StatusOK, gin.H{"code": 4, "msg": "请求参数异常"})
 		}
 	})
-	// Listen and Server in 0.0.0.0:8080
+
+	r.StaticFile("/", "./webroot/build/index.html")
+	r.StaticFile("/favicon.ico", "./webroot/build/favicon.ico")
+	r.Static("/static", "./webroot/build/static")
+
 	if err := r.Run(":8080"); err != nil {
-		fmt.Printf("%v\n", err)
+		log.Printf("%v\n", err.Error())
 	}
 }
