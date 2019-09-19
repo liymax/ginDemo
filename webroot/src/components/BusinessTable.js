@@ -34,7 +34,7 @@ function BusinessTable(props) {
         ))}
       </TableBody>
     </Table>
-  );
+  )
 }
 
-export default BusinessTable;
+export default BusinessTable

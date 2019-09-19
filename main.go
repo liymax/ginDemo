@@ -2,8 +2,10 @@ package main
 
 import (
 	"github.com/liymax/gindemo/dao"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os/exec"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -88,7 +90,27 @@ func main() {
 				c.JSON(http.StatusOK, gin.H{"code": 5, "msg": "查询失败"})
 			}
 		} else {
-			c.JSON(http.StatusOK, gin.H{"code": 4, "msg": "请求参数异常"})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 4, "msg": "请求参数异常"})
+		}
+	})
+	
+	r.GET("/sys/memo", func(c *gin.Context) {
+		cmd := exec.Command("/bin/bash", "-c", "free -h")
+		stdout, _ := cmd.StdoutPipe()
+		if err := cmd.Start(); err != nil{
+			msg := "Execute failed when Start:" + err.Error()
+			c.JSON(http.StatusOK, gin.H{"code": 5, "msg": msg})
+			return
+		}
+
+		outBytes, _ := ioutil.ReadAll(stdout)
+		_ = stdout.Close()
+
+		if err := cmd.Wait(); err != nil {
+			msg := "Execute failed when Wait:" + err.Error()
+			c.JSON(http.StatusOK, gin.H{"code": 5, "msg": msg})
+		}else {
+			c.JSON(http.StatusOK, gin.H{"code": 0, "data": string(outBytes)})
 		}
 	})
 

@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import './App.css';
+import React, {useState} from 'react'
+import './App.css'
 import {withStyles} from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button';
-import TablePagination from '@material-ui/core/TablePagination';
+import Button from '@material-ui/core/Button'
+import TablePagination from '@material-ui/core/TablePagination'
 import {useCount} from "./hooks/main"
-import BusinessTable from "./components/BusinessTable";
-
+import BusinessTable from "./components/BusinessTable"
+import SysMemo from "./components/SysMemo"
 
 const IButton = withStyles({
   root: {textTransform: 'none'}
@@ -37,7 +37,9 @@ function App() {
           onChangePage={handleChangePage}
         />
       </main>
-      <footer className="app-footer" />
+      <footer className="app-footer" >
+        <SysMemo />
+      </footer>
     </div>
   );
 }
